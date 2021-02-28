@@ -71,7 +71,7 @@ class User extends Authenticatable
     }
 
     public function annualLeaves(){
-        return $this->leaves->where('type_id',1);
+        return $this->leaves->where('type_id',1)->where('status_id',1);
     }
 
     public function annualDaysOff(){
@@ -86,8 +86,27 @@ class User extends Authenticatable
         return $days;
     }
 
+    public function annualLeavesPending(){
+        return $this->leaves->where('type_id',1)->where('status_id',3);
+    }
+
+    public function leavesPending(){
+        return $this->leaves()->where('status_id',3)->count();
+    }
+
+    public function annualDaysPending(){
+        $days = 0;
+        $leaves = $this->annualLeavesPending();
+        $leaves->each(function($leave) use (&$days) {
+            $to = Carbon::parse($leave->to);
+            $from = Carbon::parse($leave->from);
+            $days += ($from->diffInDays($to)); 
+        });
+
+        return $days;
+    }
     public function sickLeaves(){
-        return $this->leaves->where('type_id',2);
+        return $this->leaves->where('type_id',2)->where('status_id',1);
     }
 
     public function sickDaysOff(){
@@ -103,7 +122,7 @@ class User extends Authenticatable
     }
 
     public function urgentLeaves(){
-        return $this->leaves->where('type_id',2);
+        return $this->leaves->where('type_id',2)->where('status_id',1);
     }
 
     public function urgentDaysOff(){

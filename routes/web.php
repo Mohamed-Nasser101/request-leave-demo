@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ManagerPageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeaveController;
 
@@ -15,21 +16,16 @@ use App\Http\Controllers\LeaveController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// })->middleware(['auth']);
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/', function () { return redirect('/login');})->name('dashboard');
 
 Route::get('/employee',[EmployeeController::class,'show'])->middleware('auth')->name('user');
 
-Route::get('/manager', function () {
-    return view('dashboard');
-})->middleware('auth')->name('manager');
+Route::get('/manager',[ManagerPageController::class,'show'])->middleware('can:manager')->name('manager');
 
-Route::resource('user.leave', LeaveController::class)
-    ->middleware('auth');
+Route::resource('user.leave', LeaveController::class)->middleware('auth')->only('store','create');
+
+Route::get('show/leave',[LeaveController::class,'index'])->middleware('can:manager')->name('show.leaves');
+
+Route::patch('show/leave/{leave}',[LeaveController::class,'update'])->middleware('can:manager')->name('update.leaves');
 
 require __DIR__.'/auth.php';
