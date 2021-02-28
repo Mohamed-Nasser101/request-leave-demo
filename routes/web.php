@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeaveController;
 
@@ -14,17 +15,15 @@ use App\Http\Controllers\LeaveController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->middleware(['auth']);
+// Route::get('/', function () {
+//     return view('welcome');
+// })->middleware(['auth']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/employee', function () {
-    return view('employee');
-})->middleware('auth')->name('user');
+Route::get('/employee',[EmployeeController::class,'show'])->middleware('auth')->name('user');
 
 Route::get('/manager', function () {
     return view('dashboard');

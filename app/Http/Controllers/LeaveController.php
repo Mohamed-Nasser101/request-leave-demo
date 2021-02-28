@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Leave;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class LeaveController extends Controller
@@ -22,9 +23,9 @@ class LeaveController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create(User $user)
     {
-        dd($id);
+        
     }
 
     /**
